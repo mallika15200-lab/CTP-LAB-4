@@ -1,0 +1,51 @@
+import time
+import tracemalloc
+
+
+# List-based processing
+def list_processing(n):
+    data = [i * i for i in range(n)]
+    return sum(data)
+
+
+# Generator-based processing
+def generator_processing(n):
+    data = (i * i for i in range(n))
+    return sum(data)
+
+
+n = 10_000_000
+
+
+# List processing
+tracemalloc.start()
+start = time.perf_counter()
+
+result1 = list_processing(n)
+
+list_time = time.perf_counter() - start
+list_memory = tracemalloc.get_traced_memory()[1]
+tracemalloc.stop()
+
+
+# Generator processing
+tracemalloc.start()
+start = time.perf_counter()
+
+result2 = generator_processing(n)
+
+generator_time = time.perf_counter() - start
+generator_memory = tracemalloc.get_traced_memory()[1]
+tracemalloc.stop()
+
+
+print("List result:", result1)
+print("Generator result:", result2)
+
+print("\nList Processing")
+print("Time:", list_time, "seconds")
+print("Memory:", list_memory / (1024 * 1024), "MB")
+
+print("\nGenerator Processing")
+print("Time:", generator_time, "seconds")
+print("Memory:", generator_memory / (1024 * 1024), "MB")
